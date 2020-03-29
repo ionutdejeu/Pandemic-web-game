@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import roguelikeCity_magentaPng from '../assets/roguelikeCity_magenta.png';
 import Pandemic_cityJSON from '../assets/Pandemic_city.json';
 import {ScenKey as MainSceneKey}  from './GameScene';
+import {ScenKey as JoyStickTest}  from './JoyStickTest';
 export const ScenKey = "BootScene"
 export class BootScene extends Phaser.Scene {
     
@@ -23,7 +24,8 @@ export class BootScene extends Phaser.Scene {
     }
 
     create(){
-        this.scene.launch(MainSceneKey);
+        //this.scene.launch(MainSceneKey);
+        this.scene.launch(JoyStickTest);
     }
     loadTileMap() {
         // load the map tileset image
