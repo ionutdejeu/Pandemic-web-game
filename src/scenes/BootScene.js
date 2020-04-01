@@ -24,8 +24,8 @@ export class BootScene extends Phaser.Scene {
     }
 
     create(){
-        //this.scene.launch(MainSceneKey);
-        this.scene.launch(JoyStickTest);
+        this.scene.launch(MainSceneKey);
+        //this.scene.launch(JoyStickTest);
     }
     loadTileMap() {
         // load the map tileset image

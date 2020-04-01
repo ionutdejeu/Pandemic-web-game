@@ -43,10 +43,11 @@ export class AgentBaseUI extends Phaser.GameObjects.Container{
     
     constructor(scene,stats){
         super(scene,0,0);
-        this.health = new CircularHealthBar(scene,0,0,stats.getColor()); 
-        this.add(this.health.bar);
-        this.health.bar.setDepth(-1000);
-        this.health.setValue(30);
+        // this.health = new CircularHealthBar(scene,0,0,stats.getColor()); 
+        // this.add(this.health.bar);
+        // this.health.bar.setDepth(-1000);
+        // this.health.setValue(30);
+        this.stats = stats;
         this.visualBody = scene.add.image(0,20,required_assets.body.key).setDepth(10);
         this.add(this.visualBody);
         this.animationConfig = Object.assign({},required_assets.head.anims); // setup the initialc configuration for animation 
@@ -63,16 +64,22 @@ export class AgentBaseUI extends Phaser.GameObjects.Container{
             faceArray.push(Object.assign({},required_assets.head.skins[skin]));
         }
         var randomFace = faceArray[Phaser.Math.Between(0,faceArray.length-1)];
-        console.log(this.animationConfig);
+        
+        
+        for(var animation in this.animationConfig){
+        
+            var animObject = Object.assign({},this.animationConfig[animation]);
+            animObject.key = randomFace.key + '_' + animObject.key;
+            this.animationConfig[animation] = animObject;
+        }
+        
         this.spriteConfig = {...randomFace,anims:{...this.animationConfig}};
-        console.log(this.spriteConfig);      
+      
         var face = this.createSpriteWithAnimation(scene,this.spriteConfig);
         
         return face;
     }
-    updateUI(trust){
-        this.health.setValue(Phaser.Math.Clamp(100-trust,0.01,99.99));
-    }
+     
     animate(key){
         this.head.anims.play(this.animationConfig[key].key);
         this.head.anims.chain(this.animationConfig['idle'].key);
@@ -103,7 +110,15 @@ export class AgentBaseUI extends Phaser.GameObjects.Container{
         spriteInstance.anims.load(animationKey);
          
     }
-
+    updateSickState(){
+        if(this.stats._isSick){
+            this.visualBody.setTint(this.stats.getColor());
+        }
+        else{
+            this.visualBody.clearTint();
+        }
+        
+    }
     static loadAssets(scene) {
         for(var skin in required_assets.head.skins){
             var s= required_assets.head.skins[skin];

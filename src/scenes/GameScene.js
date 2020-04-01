@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { AgentController } from "../prefabs/AgentController";
-import {FollowScrollingCamera} from '../shared/FollowScrollingCamera';
+import {ScrollingCamera} from '../shared/ScrollingCamera';
 
 export const ScenKey = "GameScene"
 export class GameScene extends Phaser.Scene {
@@ -11,6 +11,7 @@ export class GameScene extends Phaser.Scene {
         })
         this.agentsPhysicsGroup = {};
         this.mapScaleFactor = 4;
+        this.initialized = false;
     }
     
 
@@ -38,21 +39,29 @@ export class GameScene extends Phaser.Scene {
         
         var agents = [];
         
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 100; i++)
         {
             var agent = new AgentController(this,this.agentsPhysicsGroup)
             agents.push(agent);
         }
         
-        this.physics.add.collider(agents,null,(object1,object2)=>{
-             
-            object1.visual.animate('attack');
-            object2.visual.animate('getHit');
-
-        });
+        
         this.physics.add.collider(agents,this.BuildingsLayer);
         this.physics.add.collider(agents,this.QuarantineZoneLayer);
         
+        this.physics.add.collider(agents,null,(object1,object2)=>{
+            if(this.initialized){
+                object1.getHit(object2.stats);
+                object2.getHit(object1.stats);
+                object1.visual.animate('attack');
+                object2.visual.animate('getHit');
+                //console.log('collider',object1,object2);
+            }
+        },
+        (object1,object2)=>{
+            //console.log('process',object1,object2);
+        },this);
+        this.initialized = true;
         
     }
     createLayer(layerName,tileSet,setCollsion){
@@ -97,7 +106,7 @@ export class GameScene extends Phaser.Scene {
         //limit the camera to the size of our map
         //this.cameras.main.setBounds(0, 0, this.map.widthInPixels * 4, this.map.heightInPixels * 4);
         this.cameras.remove(this.cameras.main);
-        var camera = new FollowScrollingCamera(this,{
+        var camera = new ScrollingCamera(this,{
             x:0,
             y:0,
             bottom:this.map.widthInPixels *this.mapScaleFactor,

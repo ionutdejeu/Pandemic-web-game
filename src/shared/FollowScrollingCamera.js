@@ -51,7 +51,9 @@ export class FollowScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.centerToBounds();
         this.scene.cameras.addExisting(this,true);
     }
-     
+    initEvents(){
+         
+    }
 
     setDragEvent() {
         this.scene.input.on('pointermove',  this.dragHandler,   this);
@@ -59,19 +61,32 @@ export class FollowScrollingCamera extends Phaser.Cameras.Scene2D.Camera {
         this.scene.input.on('pointerdown',  this.downHandler,   this);
         this.scene.input.on('dragstart',    this.objectDragStart,this);
         this.scene.input.on('dragend',      this.objectDragEnd, this);
-        //this.scene.input.on('drag',         this.objectDragEvent,this);
+        this.scene.input.on('drag',         this.objectDragEvent,this);
         
     }
     objectDragStart(pointer,gameObject){
-        console.log('obdragstart');
+        //console.log('obdragstart');
         this.draggedGameObject = gameObject;
     }
     objectDragEnd(pointer,gameObject){
         this.draggedGameObject = null;
-        console.log('objectDragEnd');
+        //console.log('objectDragEnd');
     }
-     
+    objectDragEvent(pointer, gameObject, dragX, dragY) {
+         
+        // var dragger = this.matrix.applyInverse(dragX,dragY);
+        // var angle = Phaser.Math.RadToDeg(Phaser.Math.Angle.BetweenPoints(this.zero, dragger));
+        // var distance  = Phaser.Geom.Point.GetMagnitude(dragger)
+        // var direction = new Phaser.Math.Vector2(dragger).normalize();
+        // //this.lineGraphics.lineBetween(0,0,dragger.x,dragger.y);
+        // console.log(dragger,angle,direction);
+                
+    }
 
+    downHandler() {
+        
+        
+    }
      
 
     dragHandler(pointer) {
