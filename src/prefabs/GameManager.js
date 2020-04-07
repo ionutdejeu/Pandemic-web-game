@@ -2,7 +2,7 @@
 import { AgentController,AngetController_Events } from "./AgentController";
 import { GameHud } from "./GameHud";
 import {ScenKey as GameEndedSceneKey} from '../scenes/GameEndedScene';
-
+import {ScenKey as GameWonSceneKey} from '../scenes/GameWonScene';
 export class GameManager {
 
     constructor(scene){
@@ -98,12 +98,13 @@ export class GameManager {
         if(this.sickPeople-this.totalPeople === 0){
             // this end game 
             console.log('GAME LOST');
-            this.scene.launch(GameEndedSceneKey);
+            this.scene.game.scene.start(GameEndedSceneKey);
         }
     }
     gameWon(){
         console.log(this.scene);
-        this.scene.launch(GameEndedSceneKey);
+        console.log('GAME WON');
+        this.scene.scene.manager.start(GameWonSceneKey);
     }
     
     

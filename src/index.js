@@ -3,7 +3,7 @@ import {GameScene} from './scenes/GameScene.js';
 import {BootScene} from "./scenes/BootScene.js";
 import {JoyStickTest} from "./scenes/JoyStickTest";
 import {GameEndedScene} from "./scenes/GameEndedScene";
-
+import {GameWonScene} from "./scenes/GameWonScene";
 const config = {
   type: Phaser.AUTO,
   parent: "phaser-example",
@@ -13,12 +13,12 @@ const config = {
     default: 'arcade',
     arcade: {
         gravity: {  },
-        debug: true
+        debug: false
     }
   },
   pixelArt: true,
   roundPixels: true,
-  scene: [BootScene,GameScene,JoyStickTest,GameEndedScene]
+  scene: [BootScene,GameScene,JoyStickTest,GameEndedScene,GameWonScene]
 };
 
 const game = new Phaser.Game(config);
