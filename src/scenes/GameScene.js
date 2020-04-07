@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { AgentController } from "../prefabs/AgentController";
 import {ScrollingCamera} from '../shared/ScrollingCamera';
+import {GameManager} from '../prefabs/GameManager';
 
 export const ScenKey = "GameScene"
 export class GameScene extends Phaser.Scene {
@@ -10,8 +11,7 @@ export class GameScene extends Phaser.Scene {
             key: ScenKey
         })
         this.agentsPhysicsGroup = {};
-        this.mapScaleFactor = 4;
-        this.initialized = false;
+        this.mapScaleFactor = 4;    
     }
     
 
@@ -33,36 +33,8 @@ export class GameScene extends Phaser.Scene {
 
     createAgents(){
 
-        var spriteBounds = Phaser.Geom.Rectangle.Inflate(Phaser.Geom.Rectangle.Clone(this.physics.world.bounds), -100, -100);
+        this.gManager = new GameManager(this);     
 
-        this.agentsPhysicsGroup = this.physics.add.group({repeat: 10});
-        
-        var agents = [];
-        
-        for (var i = 0; i < 100; i++)
-        {
-            var agent = new AgentController(this,this.agentsPhysicsGroup)
-            agents.push(agent);
-        }
-        
-        
-        this.physics.add.collider(agents,this.BuildingsLayer);
-        this.physics.add.collider(agents,this.QuarantineZoneLayer);
-        
-        this.physics.add.collider(agents,null,(object1,object2)=>{
-            if(this.initialized){
-                object1.getHit(object2.stats);
-                object2.getHit(object1.stats);
-                object1.visual.animate('attack');
-                object2.visual.animate('getHit');
-                //console.log('collider',object1,object2);
-            }
-        },
-        (object1,object2)=>{
-            //console.log('process',object1,object2);
-        },this);
-        this.initialized = true;
-        
     }
     createLayer(layerName,tileSet,setCollsion){
         var newLayer = this.map.createStaticLayer(layerName, tileSet, 0, 0);

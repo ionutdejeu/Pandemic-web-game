@@ -5,7 +5,7 @@ export class AgentsStats{
     
     constructor(){
         this.stats = {};
-        this.nameCollection = ['Dave','John','Smith','Oliver'];
+        this.nameCollection = ['Duce','John','Smith','Oliver'];
         this._isSick = false;
         this._colors = [0xff0000,0xffffff]
         this._events = new Phaser.Events.EventEmitter();
@@ -18,7 +18,7 @@ export class AgentsStats{
         return this._name;
     }
     random(){
-        this._name = this.nameCollection[Phaser.Math.Between(0,this.nameCollection.length)];
+        this._name = this.nameCollection[Phaser.Math.Between(0,this.nameCollection.length-1)];
         var sickChance = Phaser.Math.Between(0,100);
         if(sickChance > 90){
             this._isSick = true;

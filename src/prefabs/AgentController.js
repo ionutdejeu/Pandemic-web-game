@@ -1,10 +1,12 @@
-
 import { AgentBaseUI } from './AgentUi';
 import { AgentsStats } from './AgentStats';
-
+export const AngetController_Events = { 
+    AgentController_GetSick:'AgentController_GetSick',
+    AgentController_ExitScene:'AgentController_ExitScene'
+}
 export class AgentController extends Phaser.GameObjects.Container{
     
-    constructor(scene,physicsGroup){
+    constructor(scene){
         super(scene,0,0,null);
         this.scene = scene;
         scene.add.existing(this);
@@ -12,10 +14,10 @@ export class AgentController extends Phaser.GameObjects.Container{
         this.setSize(100,100);
         this.body.setCircle(35,15,15);
         this.setInteractive();
-        this.setStartingPosition(scene);
+         
+        this.setRandomSpeedAndDirection();
         this.stats = new AgentsStats();
-        this.enableCollision = false;
-        this.setStats();
+        this.stats.random();
         this.visual = new AgentBaseUI(scene,this.stats);
         this.add(this.visual);
         this.on('pointerup', function (pointer) {
@@ -24,7 +26,14 @@ export class AgentController extends Phaser.GameObjects.Container{
     
         },this);
         this.visual.updateSickState();
-        setTimeout(()=>{this.enableCollision = true; }, 3000);
+        this.existScene =  this.scene.time.addEvent({
+            delay: 50000,// ms
+            callback: ()=>{
+                this.destroy();
+            },
+            callbackScope: this,
+            loop: false
+        });
 
     }
     
@@ -44,7 +53,6 @@ export class AgentController extends Phaser.GameObjects.Container{
             -100);
         var pos = Phaser.Geom.Rectangle.Random(spriteBounds);
         this.setPosition(pos.x, pos.y);
-        this.body.setBounce(1, 1).setCollideWorldBounds(true);
         this.setRandomSpeedAndDirection();
     }
     holdPosition(){
@@ -55,14 +63,26 @@ export class AgentController extends Phaser.GameObjects.Container{
     }
     getHit(otherObjectStats){
 
-        if(otherObjectStats._isSick && this.enableCollision){
+        if(otherObjectStats._isSick === true && this.stats._isSick === false){
             this.stats._isSick = true;
             this.visual.updateSickState();
+            this.scene.events.emit(AngetController_Events.AgentController_GetSick,this);
         }
         
     }
     moveToQuarantien(){
-        this.setPosition(2000,1000);
+        var quarantine = new Phaser.Geom.Rectangle(1408,640,320,256);
+        var pos = Phaser.Geom.Rectangle.Random(quarantine);
+        this.setPosition(pos.x,pos.y);
+        this.holdPosition();
+        this.disableInteractive();
+        
+    }
+    destroy(){
+        this.scene.events.emit(AngetController_Events.AgentController_ExitScene,this);
+        this.existScene.destroy();
+        this.visual.destroy();
+        super.destroy();
     }
 
 }

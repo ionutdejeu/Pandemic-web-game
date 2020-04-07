@@ -83,6 +83,7 @@ export class AgentBaseUI extends Phaser.GameObjects.Container{
     animate(key){
         this.head.anims.play(this.animationConfig[key].key);
         this.head.anims.chain(this.animationConfig['idle'].key);
+        
     }
     createSpriteWithAnimation(scene,assetObject){
         var sprite = scene.add.sprite(0, 0, assetObject.key)
@@ -126,6 +127,12 @@ export class AgentBaseUI extends Phaser.GameObjects.Container{
         }
         scene.load.image(required_assets.body.key, 
                 required_assets.body.file);
+    }
+
+    destroy(){
+        this.head.destroy();
+        this.visualBody.destroy();
+        super.destroy();
     }
 
 }

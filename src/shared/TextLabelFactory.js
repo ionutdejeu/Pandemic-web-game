@@ -2,7 +2,6 @@ import Phaser from "phaser";
 
 
 export default class TextFactroy{
-    
      
     static create_text(scene,posX,posY,label){
         

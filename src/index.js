@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import {GameScene} from './scenes/GameScene.js';
 import {BootScene} from "./scenes/BootScene.js";
 import {JoyStickTest} from "./scenes/JoyStickTest";
+import {GameEndedScene} from "./scenes/GameEndedScene";
 
 const config = {
   type: Phaser.AUTO,
@@ -17,7 +18,7 @@ const config = {
   },
   pixelArt: true,
   roundPixels: true,
-  scene: [BootScene,GameScene,JoyStickTest]
+  scene: [BootScene,GameScene,JoyStickTest,GameEndedScene]
 };
 
 const game = new Phaser.Game(config);
